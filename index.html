@@ -1,0 +1,846 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Event Registration</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #6dd5ed, #2193b0);
+            padding: 20px;
+        }
+
+        .container {
+            width: 400px;
+            height: 650px;
+            perspective: 1000px;
+        }
+
+        .card {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: 1s;
+        }
+
+        .card.flip {
+            transform: rotateY(180deg);
+        }
+
+        .form {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            backface-visibility: hidden;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .login {
+            transform: rotateY(180deg);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 15px;
+            color: #2193b0;
+        }
+
+        input,
+        textarea,
+        select {
+            width: 100%;
+            padding: 10px;
+            margin: 6px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        textarea {
+            height: 55px;
+            resize: none;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            background: #2193b0;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #176d8d;
+        }
+
+        button:disabled {
+            background: #bfbfbf;
+            cursor: not-allowed;
+        }
+
+        p {
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        a {
+            color: rgb(255, 0, 140);
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        #userDetails {
+            display: none;
+            width: 90%;
+            max-width: 800px;
+            margin: 20px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+        }
+
+        #userDetails h2 {
+            text-align: center;
+            color: #2193b0;
+        }
+
+        #usersList {
+            margin-top: 20px;
+        }
+
+        .user {
+            border: 1px solid #ccc;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+        }
+
+        .user h3 {
+            color: #2193b0;
+            margin-bottom: 10px;
+        }
+
+        .user p {
+            text-align: left;
+            margin: 6px 0;
+        }
+
+        #logoutBtn {
+            width: 150px;
+            display: block;
+            margin: 20px auto 0;
+            background: #e53935;
+        }
+
+        #logoutBtn:hover {
+            background: #c62828;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+
+<!-- REGISTRATION AND LOGIN -->
+
+<div class="container" id="mainContainer">
+
+    <div class="card" id="card">
+
+
+        <!-- REGISTRATION FORM -->
+
+        <div class="form register">
+
+            <h2>Event Registration</h2>
+
+            <input
+                type="text"
+                id="firstName"
+                placeholder="First Name"
+                oninput="enableLastName()"
+            >
+
+            <input
+                type="text"
+                id="lastName"
+                placeholder="Last Name"
+                disabled
+                oninput="enableUsername()"
+            >
+
+            <input
+                type="text"
+                id="username"
+                placeholder="Username"
+                disabled
+                oninput="enablePassword()"
+            >
+
+            <input
+                type="password"
+                id="password"
+                placeholder="Password"
+                disabled
+                oninput="enableConfirmPassword()"
+            >
+
+            <input
+                type="password"
+                id="confirmPassword"
+                placeholder="Confirm Password"
+                disabled
+                oninput="enableDOB()"
+            >
+
+            <input
+                type="date"
+                id="dob"
+                disabled
+                onchange="enableMobile()"
+            >
+
+            <input
+                type="text"
+                id="mobile"
+                placeholder="Mobile Number"
+                maxlength="10"
+                disabled
+                oninput="enableAddress()"
+            >
+
+            <textarea
+                id="address"
+                placeholder="Address"
+                disabled
+                oninput="enablePin()"
+            ></textarea>
+
+            <input
+                type="text"
+                id="pin"
+                placeholder="PIN Code"
+                maxlength="6"
+                disabled
+                oninput="enableGender()"
+            >
+
+            <select
+                id="gender"
+                disabled
+                onchange="enableRegister()"
+            >
+
+                <option value="">Select Gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+
+            </select>
+
+            <button
+                id="registerBtn"
+                onclick="register()"
+                disabled
+            >
+                Register
+            </button>
+
+            <p>
+                Already Registered?
+                <a onclick="flipCard()">Login Here</a>
+            </p>
+
+        </div>
+
+
+        <!-- LOGIN FORM -->
+
+        <div class="form login">
+
+            <h2>Login</h2>
+
+            <input
+                type="text"
+                id="loginUsername"
+                placeholder="Username"
+            >
+
+            <input
+                type="password"
+                id="loginPassword"
+                placeholder="Password"
+            >
+
+            <button onclick="login()">
+                Login
+            </button>
+
+            <p>
+                <a onclick="flipBack()">
+                    Back to Registration
+                </a>
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- USER DETAILS -->
+
+<div id="userDetails">
+
+    <h2>Registered Users</h2>
+
+    <div id="usersList"></div>
+
+    <button id="logoutBtn" onclick="logout()">
+        Logout
+    </button>
+
+</div>
+
+
+<script>
+
+
+// ==========================================
+// REGISTER USER
+// ==========================================
+
+function register() {
+
+    let password =
+        document.getElementById("password").value;
+
+    let confirmPassword =
+        document.getElementById("confirmPassword").value;
+
+
+    // Check password
+
+    if (password !== confirmPassword) {
+
+        alert("Password and Confirm Password do not match!");
+
+        return;
+    }
+
+
+    let username =
+        document.getElementById("username").value.trim();
+
+
+    // Check if username already exists
+
+    if (localStorage.getItem(username) !== null) {
+
+        alert("Username already exists!");
+
+        return;
+    }
+
+
+    // Create user object
+
+    let user = {
+
+        firstName:
+            document.getElementById("firstName").value,
+
+        lastName:
+            document.getElementById("lastName").value,
+
+        username:
+            username,
+
+        password:
+            password,
+
+        dob:
+            document.getElementById("dob").value,
+
+        mobile:
+            document.getElementById("mobile").value,
+
+        address:
+            document.getElementById("address").value,
+
+        pin:
+            document.getElementById("pin").value,
+
+        gender:
+            document.getElementById("gender").value
+
+    };
+
+
+    // Store user in localStorage
+
+    localStorage.setItem(
+        username,
+        JSON.stringify(user)
+    );
+
+
+    alert("Registration Successful!");
+
+
+    // Move to login page
+
+    document.getElementById("card")
+        .classList.add("flip");
+
+}
+
+
+
+// ==========================================
+// LOGIN
+// ==========================================
+
+function login() {
+
+    let username =
+        document.getElementById("loginUsername").value.trim();
+
+    let password =
+        document.getElementById("loginPassword").value;
+
+
+    // Get user from localStorage
+
+    let user =
+        JSON.parse(localStorage.getItem(username));
+
+
+    // User does not exist
+
+    if (user === null) {
+
+        alert("User not found!");
+
+        return;
+    }
+
+
+    // Check password
+
+    if (user.password === password) {
+
+        alert("Login Successful!");
+
+
+        // Hide registration/login card
+
+        document.getElementById("mainContainer")
+            .style.display = "none";
+
+
+        // Show registered users
+
+        document.getElementById("userDetails")
+            .style.display = "block";
+
+
+        displayUsers();
+
+    }
+
+    else {
+
+        alert("Incorrect Password!");
+
+    }
+
+}
+
+
+
+// ==========================================
+// FLIP TO LOGIN
+// ==========================================
+
+function flipCard() {
+
+    document.getElementById("card")
+        .classList.add("flip");
+
+}
+
+
+
+// ==========================================
+// FLIP BACK TO REGISTRATION
+// ==========================================
+
+function flipBack() {
+
+    document.getElementById("card")
+        .classList.remove("flip");
+
+}
+
+
+
+// ==========================================
+// ENABLE LAST NAME
+// ==========================================
+
+function enableLastName() {
+
+    let firstName =
+        document.getElementById("firstName").value.trim();
+
+    if (firstName !== "") {
+
+        document.getElementById("lastName")
+            .disabled = false;
+
+    }
+
+}
+
+
+
+// ==========================================
+// ENABLE USERNAME
+// ==========================================
+
+function enableUsername() {
+
+    let lastName =
+        document.getElementById("lastName").value.trim();
+
+    if (lastName !== "") {
+
+        document.getElementById("username")
+            .disabled = false;
+
+    }
+
+}
+
+
+
+// ==========================================
+// ENABLE PASSWORD
+// ==========================================
+
+function enablePassword() {
+
+    let username =
+        document.getElementById("username").value.trim();
+
+    if (username !== "") {
+
+        document.getElementById("password")
+            .disabled = false;
+
+    }
+
+}
+
+
+
+// ==========================================
+// ENABLE CONFIRM PASSWORD
+// ==========================================
+
+function enableConfirmPassword() {
+
+    let password =
+        document.getElementById("password").value.trim();
+
+    if (password !== "") {
+
+        document.getElementById("confirmPassword")
+            .disabled = false;
+
+    }
+
+}
+
+
+
+// ==========================================
+// ENABLE DOB
+// ==========================================
+
+function enableDOB() {
+
+    let confirmPassword =
+        document.getElementById("confirmPassword").value.trim();
+
+    if (confirmPassword !== "") {
+
+        document.getElementById("dob")
+            .disabled = false;
+
+    }
+
+}
+
+
+
+// ==========================================
+// ENABLE MOBILE
+// ==========================================
+
+function enableMobile() {
+
+    let dob =
+        document.getElementById("dob").value;
+
+    if (dob !== "") {
+
+        document.getElementById("mobile")
+            .disabled = false;
+
+    }
+
+}
+
+
+
+// ==========================================
+// ENABLE ADDRESS
+// ==========================================
+
+function enableAddress() {
+
+    let mobile =
+        document.getElementById("mobile").value.trim();
+
+    if (mobile !== "") {
+
+        document.getElementById("address")
+            .disabled = false;
+
+    }
+
+}
+
+
+
+// ==========================================
+// ENABLE PIN
+// ==========================================
+
+function enablePin() {
+
+    let address =
+        document.getElementById("address").value.trim();
+
+    if (address !== "") {
+
+        document.getElementById("pin")
+            .disabled = false;
+
+    }
+
+}
+
+
+
+// ==========================================
+// ENABLE GENDER
+// ==========================================
+
+function enableGender() {
+
+    let pin =
+        document.getElementById("pin").value.trim();
+
+    if (pin !== "") {
+
+        document.getElementById("gender")
+            .disabled = false;
+
+    }
+
+}
+
+
+
+// ==========================================
+// ENABLE REGISTER BUTTON
+// ==========================================
+
+function enableRegister() {
+
+    let gender =
+        document.getElementById("gender").value;
+
+    if (gender !== "") {
+
+        document.getElementById("registerBtn")
+            .disabled = false;
+
+    }
+
+}
+
+
+
+// ==========================================
+// DISPLAY ALL USERS
+// ==========================================
+
+function displayUsers() {
+
+    let output = "";
+
+    let count = 1;
+
+
+    for (
+        let i = 0;
+        i < localStorage.length;
+        i++
+    ) {
+
+        let key =
+            localStorage.key(i);
+
+
+        let user =
+            JSON.parse(localStorage.getItem(key));
+
+
+        // Ignore non-user localStorage data
+
+        if (
+            user === null ||
+            user.firstName === undefined
+        ) {
+
+            continue;
+
+        }
+
+
+        output += `
+
+            <div class="user">
+
+                <h3>User ${count}</h3>
+
+                <p>
+                    <b>First Name:</b>
+                    ${user.firstName}
+                </p>
+
+                <p>
+                    <b>Last Name:</b>
+                    ${user.lastName}
+                </p>
+
+                <p>
+                    <b>Username:</b>
+                    ${user.username}
+                </p>
+
+                <p>
+                    <b>Date of Birth:</b>
+                    ${user.dob}
+                </p>
+
+                <p>
+                    <b>Mobile:</b>
+                    ${user.mobile}
+                </p>
+
+                <p>
+                    <b>Address:</b>
+                    ${user.address}
+                </p>
+
+                <p>
+                    <b>PIN Code:</b>
+                    ${user.pin}
+                </p>
+
+                <p>
+                    <b>Gender:</b>
+                    ${user.gender}
+                </p>
+
+            </div>
+
+        `;
+
+        count++;
+
+    }
+
+
+    if (count === 1) {
+
+        output =
+            "<p>No registered users found.</p>";
+
+    }
+
+
+    document.getElementById("usersList")
+        .innerHTML = output;
+
+}
+
+
+
+// ==========================================
+// LOGOUT
+// ==========================================
+
+function logout() {
+
+    document.getElementById("userDetails")
+        .style.display = "none";
+
+    document.getElementById("mainContainer")
+        .style.display = "block";
+
+
+    document.getElementById("card")
+        .classList.add("flip");
+
+}
+
+</script>
+
+</body>
+
+</html>
+```
